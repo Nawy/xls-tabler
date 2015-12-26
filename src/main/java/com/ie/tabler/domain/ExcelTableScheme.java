@@ -54,6 +54,10 @@ public class ExcelTableScheme {
         sheet = this.workbook.createSheet(this.title);
     }
 
+    public void createCell() {
+
+    }
+
     public HSSFWorkbook getWorkbook() {
         return workbook;
     }
