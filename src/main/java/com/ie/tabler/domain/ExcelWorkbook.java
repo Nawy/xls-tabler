@@ -1,6 +1,7 @@
 package com.ie.tabler.domain;
 
 import com.ie.tabler.context.ExcelContext;
+import com.ie.tabler.utils.IntegerIterator;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -27,24 +28,32 @@ public class ExcelWorkbook implements ExcelContext {
         Class<?> classScheme = rows.get(0).getClass();
         ExcelTableScheme tableScheme = new ExcelTableScheme(classScheme, workbook);
 
-        int rowCount = 0;
-        int cellCount = 0;
-        HSSFRow row  = tableScheme.getSheet().createRow(rowCount++);
-        for(Field field : classScheme.getDeclaredFields()) {
-            HSSFCell cell = row.createCell(cellCount++);
-            cell.setCellStyle(tableScheme.getSchemeColumns().get(field.getName()).getStyle());
-            cell.setCellValue(tableScheme.getSchemeColumns().get(field.getName()).getTitle());
-        }
+        IntegerIterator rowCount = new IntegerIterator();
+        IntegerIterator cellCount = new IntegerIterator();
+        HSSFRow row  = tableScheme.createRow(rowCount.inc());
+
+        this.createRowTitles(row, classScheme, tableScheme, cellCount);
 
         for(Object rowObject : rows) {
-            cellCount = 0;
-            row  = tableScheme.getSheet().createRow(rowCount++);
+            cellCount.toNull();
+            row  = tableScheme.getSheet().createRow(rowCount.inc());
             for(Field field : rowObject.getClass().getDeclaredFields()) {
                 FieldObject fieldObject = new FieldObject(field, rowObject);
-                HSSFCell cell = row.createCell(cellCount++);
+                HSSFCell cell = row.createCell(cellCount.inc());
                 cell.setCellStyle(tableScheme.getSchemesRows().get(field.getName()).getStyle());
                 cell.setCellValue(fieldObject.getValue().toString());
             }
+        }
+    }
+
+    private void createRowTitles(HSSFRow row, Class<?> classScheme, ExcelTableScheme tableScheme, IntegerIterator cellCount) {
+        for(Field field : classScheme.getDeclaredFields()) {
+
+            HSSFCell cell = row.createCell(cellCount.inc());
+            ExcelColumnScheme columnScheme = tableScheme.getColumnSchemeByName(field.getName());
+
+            cell.setCellStyle(columnScheme.getStyle());
+            cell.setCellValue(columnScheme.getTitle());
         }
     }
 

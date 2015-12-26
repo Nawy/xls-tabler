@@ -2,6 +2,8 @@ package com.ie.tabler.domain;
 
 import com.ie.tabler.annotation.*;
 import com.ie.tabler.exception.InvalidTableClass;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
@@ -54,8 +56,12 @@ public class ExcelTableScheme {
         sheet = this.workbook.createSheet(this.title);
     }
 
-    public void createCell() {
+    public ExcelColumnScheme getColumnSchemeByName(String name) {
+        return schemeColumns.get(name);
+    }
 
+    public HSSFRow createRow(int rowIndex) {
+        return this.sheet.createRow(rowIndex);
     }
 
     public HSSFWorkbook getWorkbook() {

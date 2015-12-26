@@ -24,10 +24,12 @@ public class CommonTest {
         cars.add(new CarsTable("Ford", new BigDecimal(9_000), "SOLD OUT"));
         cars.add(new CarsTable("BMW", new BigDecimal(12_000), "SOLD"));
         cars.add(new CarsTable("Renault", new BigDecimal(8_340), "SOLD OUT"));
+        cars.add(new CarsTable("Mercedes-Benz", new BigDecimal(21_130), "SOLD OUT"));
 
         try {
             ExcelContext workbook = ExcelTabler.getWorkbook();
             workbook.addTable(cars);
+            workbook.writeToFile("/Users/ivanadmin/Documents/tables.xls");
         } catch(Exception e) {
             e.printStackTrace(System.err);
         }

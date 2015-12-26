@@ -17,11 +17,13 @@ public class IntegerIterator {
     }
 
     public int inc() {
-        return ++this.index;
+        return this.index++;
     }
 
     public int inc(int incValue) {
-        return (this.index += incValue);
+        int lastIndex = this.index;
+        this.index += incValue;
+        return lastIndex;
     }
 
     public int get() {
