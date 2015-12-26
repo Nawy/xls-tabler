@@ -33,17 +33,7 @@ public class ExcelWorkbook implements ExcelContext {
         HSSFRow row  = tableScheme.createRow(rowCount.inc());
 
         this.createRowTitles(row, classScheme, tableScheme, cellCount);
-
-        for(Object rowObject : rows) {
-            cellCount.toNull();
-            row  = tableScheme.getSheet().createRow(rowCount.inc());
-            for(Field field : rowObject.getClass().getDeclaredFields()) {
-                FieldObject fieldObject = new FieldObject(field, rowObject);
-                HSSFCell cell = row.createCell(cellCount.inc());
-                cell.setCellStyle(tableScheme.getSchemesRows().get(field.getName()).getStyle());
-                cell.setCellValue(fieldObject.getValue().toString());
-            }
-        }
+        this.createRows(rows, tableScheme, rowCount, cellCount);
     }
 
     private void createRowTitles(HSSFRow row, Class<?> classScheme, ExcelTableScheme tableScheme, IntegerIterator cellCount) {
@@ -54,6 +44,20 @@ public class ExcelWorkbook implements ExcelContext {
 
             cell.setCellStyle(columnScheme.getStyle());
             cell.setCellValue(columnScheme.getTitle());
+        }
+    }
+
+    private void createRows(List<?> rows, ExcelTableScheme tableScheme, IntegerIterator rowCount, IntegerIterator cellCount) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        HSSFRow row = null;
+        for(Object rowObject : rows) {
+            cellCount.toNull();
+            row  = tableScheme.createRow(rowCount.inc());
+            for(Field field : rowObject.getClass().getDeclaredFields()) {
+                FieldObject fieldObject = new FieldObject(field, rowObject);
+                HSSFCell cell = row.createCell(cellCount.inc());
+                cell.setCellStyle(tableScheme.getSchemesRows().get(field.getName()).getStyle());
+                cell.setCellValue(fieldObject.getValue().toString());
+            }
         }
     }
 
