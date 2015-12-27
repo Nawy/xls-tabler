@@ -2,7 +2,6 @@ package com.ie.tabler.domain;
 
 import com.ie.tabler.annotation.*;
 import com.ie.tabler.exception.InvalidTableClass;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -19,9 +18,9 @@ public class ExcelTableScheme {
 
     private HSSFWorkbook workbook;
     private HSSFSheet sheet;
-    private String title;
+    private ExcelTitleScheme titleScheme;
     private Map<String, ExcelScheme> schemesRows;
-    private Map<String, ExcelColumnScheme> schemeColumns;
+    private Map<String, ExcelTitleScheme> schemeColumns;
 
     public ExcelTableScheme(Class<?> schemeClass, HSSFWorkbook workbook) throws InvalidTableClass {
 
@@ -37,26 +36,30 @@ public class ExcelTableScheme {
             throw new InvalidTableClass("Invalid class for XLS scheme");
         }
 
-        this.title = tableAnnotation.value();
+        XlsTitle tableTitleAnnotation = schemeClass.getAnnotation(XlsTitle.class);
+        if(tableTitleAnnotation != null) {
+            this.titleScheme = new ExcelTitleScheme(tableTitleAnnotation, workbook);
+        }
 
         Field[] fields = schemeClass.getDeclaredFields();
         for(Field field : fields) {
-            XlsColumn columnAnnotation = field.getAnnotation(XlsColumn.class);
+            XlsTitle columnAnnotation = field.getAnnotation(XlsTitle.class);
             XlsFont fontAnnotation = field.getAnnotation(XlsFont.class);
             XlsBorder borderAnnotation = field.getAnnotation(XlsBorder.class);
             XlsAlign alignAnnotation = field.getAnnotation(XlsAlign.class);
 
-            ExcelColumnScheme columnScheme = new ExcelColumnScheme(columnAnnotation, workbook);
-            ExcelScheme rowScheme = new ExcelScheme(fontAnnotation, borderAnnotation, alignAnnotation, workbook);
+            ExcelAlign align = (alignAnnotation != null) ? alignAnnotation.value() : null;
+
+            ExcelTitleScheme columnScheme = new ExcelTitleScheme(columnAnnotation, workbook);
+            ExcelScheme rowScheme = new ExcelScheme(fontAnnotation, borderAnnotation, align, workbook);
 
             schemeColumns.put(field.getName(), columnScheme);
             schemesRows.put(field.getName(), rowScheme);
         }
 
-        sheet = this.workbook.createSheet(this.title);
+        sheet = this.workbook.createSheet(this.titleScheme.getTitle());
     }
-
-    public ExcelColumnScheme getColumnSchemeByName(String name) {
+    public ExcelTitleScheme getColumnSchemeByName(String name) {
         return schemeColumns.get(name);
     }
 
@@ -80,12 +83,12 @@ public class ExcelTableScheme {
         this.sheet = sheet;
     }
 
-    public String getTitle() {
-        return title;
+    public ExcelTitleScheme getTitleScheme() {
+        return titleScheme;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitleScheme(ExcelTitleScheme titleScheme) {
+        this.titleScheme = titleScheme;
     }
 
     public Map<String, ExcelScheme> getSchemesRows() {
@@ -96,11 +99,11 @@ public class ExcelTableScheme {
         this.schemesRows = schemesRows;
     }
 
-    public Map<String, ExcelColumnScheme> getSchemeColumns() {
+    public Map<String, ExcelTitleScheme> getSchemeColumns() {
         return schemeColumns;
     }
 
-    public void setSchemeColumns(Map<String, ExcelColumnScheme> schemeColumns) {
+    public void setSchemeColumns(Map<String, ExcelTitleScheme> schemeColumns) {
         this.schemeColumns = schemeColumns;
     }
 }

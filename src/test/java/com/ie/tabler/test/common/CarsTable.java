@@ -9,11 +9,12 @@ import java.math.BigDecimal;
  * @author Ivan Ermolaev(ermolaevym@gmail.com)
  * @since 21:28 2015-12-05
  */
-@XlsTable("Beautiful Cars")
+@XlsTable
+@XlsTitle("Beautiful Cars")
 public class CarsTable {
 
-    @XlsColumn(
-            name = "Mark",
+    @XlsTitle(
+            value = "Mark",
             font = @XlsFont(size = 20, family = "Serif"),
             border = @XlsBorder(size = 2))
     @XlsFont(
@@ -24,8 +25,8 @@ public class CarsTable {
     @XlsAlign(ExcelAlign.CENTER)
     private String mark;
 
-    @XlsColumn(
-            name = "Price",
+    @XlsTitle(
+            value = "Price",
             font = @XlsFont(size = 20, family = "Serif")
     )
     @XlsFont(
@@ -34,8 +35,8 @@ public class CarsTable {
     )
     private BigDecimal price;
 
-    @XlsColumn(
-            name = "Status",
+    @XlsTitle(
+            value = "Status",
             font = @XlsFont(size = 20, family = "Serif")
     )
     @XlsFont(

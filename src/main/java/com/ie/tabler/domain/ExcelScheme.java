@@ -16,7 +16,7 @@ public class ExcelScheme {
     private HSSFCellStyle style;
     private HSSFWorkbook workbook;
 
-    public ExcelScheme(XlsFont font, XlsBorder border, XlsAlign align, HSSFWorkbook workbook) {
+    public ExcelScheme(XlsFont font, XlsBorder border, ExcelAlign align, HSSFWorkbook workbook) {
         this.workbook = workbook;
 
         this.style = workbook.createCellStyle();
@@ -44,7 +44,7 @@ public class ExcelScheme {
         }
 
         if(align != null) {
-            this.style.setAlignment(align.value().getValue());
+            this.style.setAlignment(align.getValue());
         }
     }
 

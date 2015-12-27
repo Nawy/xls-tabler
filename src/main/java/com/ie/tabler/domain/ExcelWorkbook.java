@@ -5,6 +5,7 @@ import com.ie.tabler.utils.IntegerIterator;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -18,6 +19,8 @@ import java.util.List;
 public class ExcelWorkbook implements ExcelContext {
 
     private HSSFWorkbook workbook;
+    private IntegerIterator rowCount;
+    private IntegerIterator cellCount;
 
     public ExcelWorkbook() {
         workbook = new HSSFWorkbook();
@@ -28,26 +31,40 @@ public class ExcelWorkbook implements ExcelContext {
         Class<?> classScheme = rows.get(0).getClass();
         ExcelTableScheme tableScheme = new ExcelTableScheme(classScheme, workbook);
 
-        IntegerIterator rowCount = new IntegerIterator();
-        IntegerIterator cellCount = new IntegerIterator();
-        HSSFRow row  = tableScheme.createRow(rowCount.inc());
+        this.rowCount = new IntegerIterator();
+        this.cellCount = new IntegerIterator();
 
-        this.createRowTitles(row, classScheme, tableScheme, cellCount);
-        this.createRows(rows, tableScheme, rowCount, cellCount);
+        this.createTableTitle(tableScheme);
+        this.createColumnTitles(classScheme, tableScheme);
+        this.createRows(rows, tableScheme);
     }
 
-    private void createRowTitles(HSSFRow row, Class<?> classScheme, ExcelTableScheme tableScheme, IntegerIterator cellCount) {
+    private void createTableTitle(ExcelTableScheme tableScheme) {
+        HSSFRow row = tableScheme.createRow(rowCount.inc());
+
+        int columnsSize = tableScheme.getSchemeColumns().size()-1;
+        HSSFCell headerCell = row.createCell(cellCount.inc(columnsSize));
+        headerCell.setCellValue(tableScheme.getTitleScheme().getTitle());
+        headerCell.setCellStyle(tableScheme.getTitleScheme().getStyle());
+        tableScheme.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), headerCell.getColumnIndex(), cellCount.get()));
+    }
+
+    private void createColumnTitles(Class<?> classScheme, ExcelTableScheme tableScheme) {
+
+        HSSFRow row = tableScheme.createRow(rowCount.inc());
+        cellCount.toNull();
+
         for(Field field : classScheme.getDeclaredFields()) {
 
             HSSFCell cell = row.createCell(cellCount.inc());
-            ExcelColumnScheme columnScheme = tableScheme.getColumnSchemeByName(field.getName());
+            ExcelTitleScheme columnScheme = tableScheme.getColumnSchemeByName(field.getName());
 
             cell.setCellStyle(columnScheme.getStyle());
             cell.setCellValue(columnScheme.getTitle());
         }
     }
 
-    private void createRows(List<?> rows, ExcelTableScheme tableScheme, IntegerIterator rowCount, IntegerIterator cellCount) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    private void createRows(List<?> rows, ExcelTableScheme tableScheme) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         HSSFRow row = null;
         for(Object rowObject : rows) {
             cellCount.toNull();
