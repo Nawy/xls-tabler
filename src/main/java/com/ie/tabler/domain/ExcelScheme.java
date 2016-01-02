@@ -16,10 +16,17 @@ public class ExcelScheme {
     private HSSFCellStyle style;
     private HSSFWorkbook workbook;
 
-    public ExcelScheme(XlsFont font, XlsBorder border, ExcelAlign align, HSSFWorkbook workbook) {
-        this.workbook = workbook;
+    public ExcelScheme(Builder builder) {
+        this.workbook = builder.workbook;
 
         this.style = workbook.createCellStyle();
+
+        this.createBorder(builder.border);
+        this.createFont(builder.font);
+        this.createAlign(builder.align);
+    }
+
+    private void createBorder(XlsBorder border) {
         if(border != null) {
             if(border.left() == 0 && border.right() == 0 && border.top() == 0 && border.bottom() == 0)
             {
@@ -35,14 +42,18 @@ public class ExcelScheme {
                 this.style.setBorderBottom(border.bottom());
             }
         }
+    }
 
+    private void createFont(XlsFont font) {
         if(font != null) {
             this.font = workbook.createFont();
             this.font.setFontHeightInPoints(font.size());
             this.font.setFontName(font.family());
             this.style.setFont(this.font);
         }
+    }
 
+    private void createAlign(ExcelAlign align) {
         if(align != null) {
             this.style.setAlignment(align.getValue());
         }
@@ -62,5 +73,36 @@ public class ExcelScheme {
 
     public void setStyle(HSSFCellStyle style) {
         this.style = style;
+    }
+
+    public static class Builder {
+        private XlsFont font;
+        private XlsBorder border;
+        private ExcelAlign align;
+        private HSSFWorkbook workbook;
+
+        Builder workbook(HSSFWorkbook workbook) {
+            this.workbook = workbook;
+            return this;
+        }
+
+        Builder font(XlsFont font) {
+            this.font = font;
+            return this;
+        }
+
+        Builder border(XlsBorder border) {
+            this.border = border;
+            return this;
+        }
+
+        Builder align(ExcelAlign align) {
+            this.align = align;
+            return this;
+        }
+
+        ExcelScheme build() {
+            return new ExcelScheme(this);
+        }
     }
 }

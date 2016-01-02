@@ -51,7 +51,12 @@ public class ExcelTableScheme {
             ExcelAlign align = (alignAnnotation != null) ? alignAnnotation.value() : null;
 
             ExcelTitleScheme columnScheme = new ExcelTitleScheme(columnAnnotation, workbook);
-            ExcelScheme rowScheme = new ExcelScheme(fontAnnotation, borderAnnotation, align, workbook);
+            ExcelScheme rowScheme = new ExcelScheme.Builder()
+                    .workbook(workbook)
+                    .border(borderAnnotation)
+                    .font(fontAnnotation)
+                    .align(align)
+                    .build();
 
             schemeColumns.put(field.getName(), columnScheme);
             schemesRows.put(field.getName(), rowScheme);

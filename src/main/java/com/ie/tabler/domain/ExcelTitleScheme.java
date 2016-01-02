@@ -12,11 +12,11 @@ public class ExcelTitleScheme extends ExcelScheme {
     private String title;
 
     public ExcelTitleScheme(XlsTitle titleAnnotation, HSSFWorkbook workbook) {
-        super(
-                titleAnnotation.font(),
-                titleAnnotation.border(),
-                titleAnnotation.align(),
-                workbook
+        super(new ExcelScheme.Builder()
+                        .workbook(workbook)
+                        .border(titleAnnotation.border())
+                        .font(titleAnnotation.font())
+                        .align(titleAnnotation.align())
         );
         title = titleAnnotation.value();
     }
