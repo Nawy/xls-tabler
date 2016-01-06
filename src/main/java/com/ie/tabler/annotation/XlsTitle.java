@@ -17,5 +17,5 @@ public @interface XlsTitle {
     String value() default "Title";
     XlsFont font() default @XlsFont;
     XlsBorder border() default @XlsBorder;
-    XlsAlign align() default @XlsAlign;
+    XlsAlign align() default @XlsAlign(horizontal = ExcelHorizontalAlign.CENTER);
 }
