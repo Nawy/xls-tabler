@@ -1,6 +1,7 @@
 package com.ie.tabler.annotation;
 
-import com.ie.tabler.domain.ExcelAlign;
+import com.ie.tabler.domain.ExcelHorizontalAlign;
+import com.ie.tabler.domain.ExcelVerticalAlign;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,5 +12,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XlsAlign {
-    ExcelAlign value() default ExcelAlign.GENERAL;
+    ExcelHorizontalAlign horizontal() default ExcelHorizontalAlign.GENERAL;
+    ExcelVerticalAlign vertical() default ExcelVerticalAlign.TOP;
 }

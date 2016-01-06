@@ -48,14 +48,12 @@ public class ExcelTableScheme {
             XlsBorder borderAnnotation = field.getAnnotation(XlsBorder.class);
             XlsAlign alignAnnotation = field.getAnnotation(XlsAlign.class);
 
-            ExcelAlign align = (alignAnnotation != null) ? alignAnnotation.value() : null;
-
             ExcelTitleScheme columnScheme = new ExcelTitleScheme(columnAnnotation, workbook);
             ExcelScheme rowScheme = new ExcelScheme.Builder()
                     .workbook(workbook)
                     .border(borderAnnotation)
                     .font(fontAnnotation)
-                    .align(align)
+                    .align(alignAnnotation)
                     .build();
 
             schemeColumns.put(field.getName(), columnScheme);

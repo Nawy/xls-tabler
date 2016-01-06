@@ -1,7 +1,5 @@
 package com.ie.tabler.annotation;
 
-import com.ie.tabler.domain.ExcelAlign;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

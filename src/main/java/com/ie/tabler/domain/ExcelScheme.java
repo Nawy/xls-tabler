@@ -53,9 +53,10 @@ public class ExcelScheme {
         }
     }
 
-    private void createAlign(ExcelAlign align) {
+    private void createAlign(XlsAlign align) {
         if(align != null) {
-            this.style.setAlignment(align.getValue());
+            this.style.setVerticalAlignment(align.vertical().getValue());
+            this.style.setAlignment(align.horizontal().getValue());
         }
     }
 
@@ -78,7 +79,7 @@ public class ExcelScheme {
     public static class Builder {
         private XlsFont font;
         private XlsBorder border;
-        private ExcelAlign align;
+        private XlsAlign align;
         private HSSFWorkbook workbook;
 
         Builder workbook(HSSFWorkbook workbook) {
@@ -96,7 +97,7 @@ public class ExcelScheme {
             return this;
         }
 
-        Builder align(ExcelAlign align) {
+        Builder align(XlsAlign align) {
             this.align = align;
             return this;
         }

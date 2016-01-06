@@ -1,6 +1,6 @@
 package com.ie.tabler.annotation;
 
-import com.ie.tabler.domain.ExcelAlign;
+import com.ie.tabler.domain.ExcelHorizontalAlign;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,5 +17,5 @@ public @interface XlsTitle {
     String value() default "Title";
     XlsFont font() default @XlsFont;
     XlsBorder border() default @XlsBorder;
-    ExcelAlign align() default ExcelAlign.CENTER;
+    XlsAlign align() default @XlsAlign;
 }

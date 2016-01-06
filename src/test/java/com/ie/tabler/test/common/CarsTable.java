@@ -1,7 +1,7 @@
 package com.ie.tabler.test.common;
 
 import com.ie.tabler.annotation.*;
-import com.ie.tabler.domain.ExcelAlign;
+import com.ie.tabler.domain.ExcelHorizontalAlign;
 
 import java.math.BigDecimal;
 
@@ -22,7 +22,7 @@ public class CarsTable {
             family = "Serif"
     )
     @XlsBorder(size = 1)
-    @XlsAlign(ExcelAlign.CENTER)
+    @XlsAlign(horizontal = ExcelHorizontalAlign.CENTER)
     private String mark;
 
     @XlsTitle(

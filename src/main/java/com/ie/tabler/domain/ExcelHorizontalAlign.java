@@ -6,7 +6,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
  * @author Ivan Ermolaev(ermolaevym@gmail.com)
  * @since 11:54 2015-12-12
  */
-public enum ExcelAlign {
+public enum ExcelHorizontalAlign {
     CENTER(HSSFCellStyle.ALIGN_CENTER),
     CENTER_SELECTION(HSSFCellStyle.ALIGN_CENTER_SELECTION),
     FILL(HSSFCellStyle.ALIGN_FILL),
@@ -14,7 +14,7 @@ public enum ExcelAlign {
 
     private short value;
 
-    private ExcelAlign(short value) {
+    private ExcelHorizontalAlign(short value) {
         this.value = value;
     }
 
