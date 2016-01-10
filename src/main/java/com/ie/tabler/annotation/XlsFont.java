@@ -12,7 +12,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface XlsFont {
+
     int style() default 4;
+
     String family() default "Arial";
+
     short size() default 16;
 }

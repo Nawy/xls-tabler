@@ -21,11 +21,13 @@ public class ExcelTableScheme {
     private ExcelTitleScheme titleScheme;
     private Map<String, ExcelScheme> schemesRows;
     private Map<String, ExcelTitleScheme> schemeColumns;
+    private Class<?> schemeClass;
 
     public ExcelTableScheme(Class<?> schemeClass, HSSFWorkbook workbook) throws InvalidTableClass {
 
-        schemeColumns = new HashMap<>();
-        schemesRows = new HashMap<>();
+        this.schemeClass = schemeClass;
+        this.schemeColumns = new HashMap<>();
+        this.schemesRows = new HashMap<>();
 
         this.workbook = workbook;
 
@@ -36,19 +38,35 @@ public class ExcelTableScheme {
             throw new InvalidTableClass("Invalid class for XLS scheme");
         }
 
-        XlsTitle tableTitleAnnotation = schemeClass.getAnnotation(XlsTitle.class);
+        this.createTitle();
+
+        this.createScheme();
+
+        sheet = this.workbook.createSheet(this.titleScheme.getTitle());
+    }
+
+    public void createTitle() {
+
+        XlsTitle tableTitleAnnotation = this.schemeClass.getAnnotation(XlsTitle.class);
+
         if(tableTitleAnnotation != null) {
             this.titleScheme = new ExcelTitleScheme(tableTitleAnnotation, workbook);
         }
+    }
+
+    private void createScheme() {
 
         Field[] fields = schemeClass.getDeclaredFields();
+
         for(Field field : fields) {
+            
             XlsTitle columnAnnotation = field.getAnnotation(XlsTitle.class);
             XlsFont fontAnnotation = field.getAnnotation(XlsFont.class);
             XlsBorder borderAnnotation = field.getAnnotation(XlsBorder.class);
             XlsAlign alignAnnotation = field.getAnnotation(XlsAlign.class);
 
             ExcelTitleScheme columnScheme = new ExcelTitleScheme(columnAnnotation, workbook);
+
             ExcelScheme rowScheme = new ExcelScheme.Builder()
                     .workbook(workbook)
                     .border(borderAnnotation)
@@ -59,9 +77,8 @@ public class ExcelTableScheme {
             schemeColumns.put(field.getName(), columnScheme);
             schemesRows.put(field.getName(), rowScheme);
         }
-
-        sheet = this.workbook.createSheet(this.titleScheme.getTitle());
     }
+
     public ExcelTitleScheme getColumnSchemeByName(String name) {
         return schemeColumns.get(name);
     }
